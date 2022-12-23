@@ -4,11 +4,14 @@ import (
 	"bytes"
 	"encoding/binary"
 	"math/rand"
+	"strings"
+
 	// "strings"
 	"time"
 
 	"github.com/google/uuid"
 	conventions "go.opentelemetry.io/collector/model/semconv/v1.9.0"
+
 	// "go.opentelemetry.io/otel/attribute"
 
 	// "go.opentelemetry.io/collector/consumer/pdata"
@@ -194,69 +197,51 @@ func NewSpanID() pcommon.SpanID {
 }
 
 func appendTraceSpans(backend *BackendSystem, backendScopeSpans *ptrace.ScopeSpans, atmScopeSpans *ptrace.ScopeSpans){
-	// traceId := NewTraceID()
+	traceId := NewTraceID()
 
-// 	var atmOperationName string
+	var atmOperationName string
 
-// 	switch {
-// 	case strings.Contains(backend.Endpoint, "balance"):
-//         atmOperationName = "Check Balance"
-// 	case strings.Contains(backend.Endpoint, "deposit"):
-// 		atmOperationName = "Make Deposit"
-// 	case strings.Contains(backend.Endpoint, "withdraw"):
-// 		atmOperationName = "Fast Cash"
-// 	}
+	switch {
+	case strings.Contains(backend.Endpoint, "balance"):
+        atmOperationName = "Check Balance"
+	case strings.Contains(backend.Endpoint, "deposit"):
+		atmOperationName = "Make Deposit"
+	case strings.Contains(backend.Endpoint, "withdraw"):
+		atmOperationName = "Fast Cash"
+	}
 
-// 	atmSpanId := NewSpanID()
-//     atmSpanStartTime := time.Now()
-//     atmDuration, _ := time.ParseDuration("4s")
-//     atmSpanFinishTime := atmSpanStartTime.Add(atmDuration)
-
-
-// 	atmSpan := atmScopeSpans.Spans().AppendEmpty()
-// 	atmSpan.SetTraceID(traceId)
-// 	atmSpan.SetSpanID(atmSpanId)
-// 	atmSpan.SetName(atmOperationName)
-// 	atmSpan.SetKind(ptrace.SpanKindClient)
-// 	atmSpan.Status().SetCode(ptrace.StatusCodeOk)
-// 	atmSpan.SetStartTimestamp(pcommon.NewTimestampFromTime(atmSpanStartTime))
-// 	atmSpan.SetEndTimestamp(pcommon.NewTimestampFromTime(atmSpanFinishTime))
+	atmSpanId := NewSpanID()
+    atmSpanStartTime := time.Now()
+    atmDuration, _ := time.ParseDuration("4s")
+    atmSpanFinishTime := atmSpanStartTime.Add(atmDuration)
 
 
-// 	backendSpanId := NewSpanID()
-
-// 	backendDuration, _ := time.ParseDuration("2s")
-//     backendSpanStartTime := atmSpanStartTime.Add(backendDuration)
-
-
-// 	backendSpan := backendScopeSpans.Spans().AppendEmpty()
-// 	backendSpan.SetTraceID(atmSpan.TraceID())
-// 	backendSpan.SetSpanID(backendSpanId)
-// 	backendSpan.SetParentSpanID(atmSpan.SpanID())
-// 	backendSpan.SetName(backend.Endpoint)
-// 	backendSpan.SetKind(ptrace.SpanKindServer)
-// 	backendSpan.Status().SetCode(ptrace.StatusCodeOk)
-// 	backendSpan.SetStartTimestamp(pcommon.NewTimestampFromTime(backendSpanStartTime))
-// 	backendSpan.SetEndTimestamp(atmSpan.EndTimestamp())
-
-// }
+	atmSpan := atmScopeSpans.Spans().AppendEmpty()
+	atmSpan.SetTraceID(traceId)
+	atmSpan.SetSpanID(atmSpanId)
+	atmSpan.SetName(atmOperationName)
+	atmSpan.SetKind(ptrace.SpanKindClient)
+	atmSpan.Status().SetCode(ptrace.StatusCodeOk)
+	atmSpan.SetStartTimestamp(pcommon.NewTimestampFromTime(atmSpanStartTime))
+	atmSpan.SetEndTimestamp(pcommon.NewTimestampFromTime(atmSpanFinishTime))
 
 
-    traceId := NewTraceID()
 	backendSpanId := NewSpanID()
 
-	backendDuration, _ := time.ParseDuration("1s")
-    backendSpanStartTime := time.Now()
-    backendSpanFinishTime := backendSpanStartTime.Add(backendDuration)
+	backendDuration, _ := time.ParseDuration("2s")
+    backendSpanStartTime := atmSpanStartTime.Add(backendDuration)
 
 
 	backendSpan := backendScopeSpans.Spans().AppendEmpty()
-	backendSpan.SetTraceID(traceId)
+	backendSpan.SetTraceID(atmSpan.TraceID())
 	backendSpan.SetSpanID(backendSpanId)
+	backendSpan.SetParentSpanID(atmSpan.SpanID())
 	backendSpan.SetName(backend.Endpoint)
 	backendSpan.SetKind(ptrace.SpanKindServer)
+	backendSpan.Status().SetCode(ptrace.StatusCodeOk)
 	backendSpan.SetStartTimestamp(pcommon.NewTimestampFromTime(backendSpanStartTime))
-	backendSpan.SetEndTimestamp(pcommon.NewTimestampFromTime(backendSpanFinishTime))
+	backendSpan.SetEndTimestamp(atmSpan.EndTimestamp())
 
 }
+
 
