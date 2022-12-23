@@ -100,7 +100,7 @@ func generateTraces() ptrace.Traces{
 	traces := ptrace.NewTraces()
 
 
-	numeberOfTraces := 20
+	numeberOfTraces := 0
 	for i := 0; i <= numeberOfTraces; i++{
 		newAtm := generateAtm()
 		newBackendSystem := generateBackendSystem()
