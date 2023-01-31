@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"go.opentelemetry.io/collector/config"
+	// "go.opentelemetry.io/collector/config"
 )
 
 type Config struct{
-	config.ReceiverSettings `mapstructure:",squash"`
+	// config.ReceiverSettings `mapstructure:",squash"`
 	Interval string `mapstructure:"interval"`
 	NumberOfTraces int `mapstructure:"number_of_traces"`
 }

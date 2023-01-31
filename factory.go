@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/config"
+	// "go.opentelemetry.io/collector/config"
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/receiver"
 )
@@ -18,7 +18,7 @@ const (
 func CreateDefaultConfig() component.Config {
 
 	return &Config{
-		ReceiverSettings: config.NewReceiverSettings(component.NewID(typeStr)),
+		// ReceiverSettings: config.NewReceiverSettings(component.NewID(typeStr)),
 		Interval:         strconv.Itoa(defaultInterval),
 	}
 }
